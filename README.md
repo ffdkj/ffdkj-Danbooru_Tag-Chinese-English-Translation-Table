@@ -1,10 +1,10 @@
 # Danbooru Tag 中英文对照表 
 
-![Tag Count](https://count.getloli.com/@ffdkj_tags?name=ffdkj&theme=booru-lewd&padding=6&offset=0&align=center&scale=2&pixelated=1&darkmode=auto&num=324785) 
+![Tag Count](https://count.getloli.com/@ffdkj_tags?name=ffdkj&theme=booru-lewd&padding=6&offset=0&align=center&scale=2&pixelated=1&darkmode=auto&num=317314) 
 
 ## ***每日更新 !***
 
-截止08月26日 00:17 已收录并翻译 **324785**+ 条标签。
+截止08月27日 00:26 已收录并翻译 **317314**+ 条标签。
 
 收录所有 post_count >= 10 的 tag，使用人工智能 **Gemini 3 Flash** 翻译 + 能工智人校对。如使用过程中遇到翻译错误可访问https://tagsuggest.zeabur.app 提交纠错或联系 2624696826a@gmail.com。
 
