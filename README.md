@@ -17,6 +17,9 @@
 | **`cn_name`** | `TEXT` | - | **中文翻译**。由 Gemini 3 Flash 翻译 + 能工智人校对的结果。 |
 | **`post_count`** | `INTEGER` | - | **引用数量**。该标签在 Danbooru 上的帖子总数，反映标签的热门程度。 |
 
+## pixiv也有份!
+
+[pixiv的tag中英文对照表](https://github.com/ffdkj/Pixiv_Tag-Chinese-English-Translation-Table)
 ---
 
 > **Acknowledgment:** > README 的实时计数展示由 [Moe-Counter](https://github.com/journey-ad/Moe-Counter) 提供支持。感谢作者 [@journey-ad](https://github.com/journey-ad) 开发的猫娘计数器！
