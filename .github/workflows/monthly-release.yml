@@ -1,0 +1,63 @@
+# Monthly data release: tag.sqlite -> tags.csv + tags.json -> GitHub Release.
+#
+# Managed by the danbooru_pixiv_tags_scraper project: this file is rewritten
+# on every data push, so edit it there, not in this repository.
+#
+# Runs at 00:00 UTC on the 1st of every month (= 08:00 Asia/Shanghai) and
+# publishes a release tagged vYYYY-MM-DD carrying three assets. The asset
+# names are chosen per repo by the converter script:
+#   Danbooru  tag.sqlite          tags.csv          tags.json
+#   Pixiv     pixiv_tags.sqlite   pixiv_tags.csv    pixiv_tags.json
+#
+# Note: GitHub only runs scheduled workflows on the default branch, and
+# disables them after 60 days without repository activity. The scraper pushes
+# data daily, which keeps the schedule alive.
+name: Monthly tag data release
+
+on:
+  schedule:
+    # 00:00 UTC on the 1st of every month.
+    - cron: "0 0 1 * *"
+  # Allows publishing (or re-publishing) a release on demand from the UI.
+  workflow_dispatch:
+  # TEMPORARY: lets this first push start a run without a token.
+  # Removed again right after the verification run.
+  push:
+    paths:
+      - '.github/workflows/monthly-release.yml'
+
+# Required: the built-in GITHUB_TOKEN needs write access to create a release.
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v6
+
+      - name: Export the release assets from tag.sqlite
+        run: python3 .github/scripts/export_release_assets.py
+
+      - name: Publish the monthly release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TZ: Asia/Shanghai
+        run: |
+          set -euo pipefail
+          # Written by the converter: DB_ASSET, CSV_ASSET, JSON_ASSET.
+          source .release-assets.env
+          tag="v$(date +%Y-%m-%d)"
+          title="$(date +%-m)月$(date +%-d)号数据（附csv，json，sqlite格式数据）"
+          notes="自动生成于 $(date +%Y-%m-%d)（Asia/Shanghai），包含 ${DB_ASSET}、${CSV_ASSET}、${JSON_ASSET} 三种格式。"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "release $tag already exists - refreshing its assets"
+            gh release upload "$tag" --repo "$GITHUB_REPOSITORY" --clobber \
+              "$DB_ASSET" "$CSV_ASSET" "$JSON_ASSET"
+          else
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" \
+              --title "$title" --notes "$notes" --latest \
+              "$DB_ASSET" "$CSV_ASSET" "$JSON_ASSET"
+          fi
+          echo "published $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$tag"
